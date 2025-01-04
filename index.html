@@ -164,6 +164,22 @@
                 padding: 10px 20px;
             }
         }
+
+        /* For Designed By Section */
+        .designed-by {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .designed-by img {
+            max-width: 150px;
+            margin-top: 10px;
+            border-radius: 50%;
+            border: 4px solid #007bff;
+        }
     </style>
 </head>
 <body>
@@ -228,6 +244,11 @@
 
     <button class="download-btn" onclick="downloadSlip()">ডাউনলোড</button>
     <button class="download-btn" onclick="generateSlip()">স্লিপ তৈরি করুন</button>
+
+    <div class="designed-by">
+        <p>Prepared by: Jamiul Hasan</p>
+        <img src="https://i.postimg.cc/HnHFK4zf/Whats-App-Image-2024-12-28-at-12-13-43-2ce1c7fc.jpg" alt="Prepared by Jamiul Hasan">
+    </div>
 
     <script>
         function generateSlip() {
