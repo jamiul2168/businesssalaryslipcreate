@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বেতন স্লিপ</title>
+    <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'SolaimanLipi', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .salary-slip, .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .salary-slip {
+            display: none;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin: 0;
+            color: #333;
+        }
+
+        .header h2 {
+            font-size: 22px;
+            margin: 10px 0 0;
+            color: #555;
+        }
+
+        .details {
+            margin-top: 20px;
+        }
+
+        .details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details th, .details td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+        }
+
+        .details th {
+            background: #f7f7f7;
+            font-weight: bold;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .signature p {
+            margin: 0;
+        }
+
+        .download-btn, .form-container button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .download-btn:hover, .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .form-container label {
+            font-size: 18px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- ফর্ম -->
+    <div class="form-container" id="form-container">
+        <h1 style="text-align: center;">বেতন স্লিপের তথ্য দিন</h1>
+        <label for="shopName">দোকানের নাম</label>
+        <input type="text" id="shopName" placeholder="দোকানের নাম লিখুন" required>
+        
+        <label for="employeeName">কর্মচারীর নাম</label>
+        <input type="text" id="employeeName" placeholder="কর্মচারীর নাম লিখুন" required>
+        
+        <label for="designation">পদবি</label>
+        <input type="text" id="designation" placeholder="পদবি লিখুন" required>
+        
+        <label for="salary">মাসিক বেতন</label>
+        <input type="text" id="salary" placeholder="মাসিক বেতন লিখুন (যেমন: ১২,০০০ টাকা)" required>
+        
+        <label for="experience">কাজের সময়কাল</label>
+        <input type="text" id="experience" placeholder="কাজের সময়কাল লিখুন (যেমন: ৪ বছর)" required>
+        
+        <label for="ownerName">মালিকের নাম</label>
+        <input type="text" id="ownerName" placeholder="মালিকের নাম লিখুন" required>
+        
+        <button onclick="generateSlip()">বেতন স্লিপ তৈরি করুন</button>
+    </div>
+
+    <!-- বেতন স্লিপ -->
+    <div class="salary-slip" id="salary-slip">
+        <div class="header">
+            <h1>বেতন স্লিপ</h1>
+            <h2 id="displayShopName"></h2>
+        </div>
+        <p>তারিখ: <strong id="currentDate"></strong></p>
+        <div class="details">
+            <table>
+                <tr>
+                    <th>কর্মচারীর নাম</th>
+                    <td id="displayEmployeeName"></td>
+                </tr>
+                <tr>
+                    <th>পদবি</th>
+                    <td id="displayDesignation"></td>
+                </tr>
+                <tr>
+                    <th>মাসিক বেতন</th>
+                    <td id="displaySalary"></td>
+                </tr>
+                <tr>
+                    <th>কাজের সময়কাল</th>
+                    <td id="displayExperience"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="footer">
+            <p>উপরোক্ত কর্মচারী আমাদের দোকানে কাজ করছেন এবং এখানে প্রদত্ত তথ্য সঠিক।</p>
+        </div>
+        <div class="signature">
+            <p>____________________________</p>
+            <p>দোকানের মালিকের স্বাক্ষর</p>
+            <p id="displayOwnerName"></p>
+        </div>
+        <button class="download-btn" onclick="downloadSlip()">ডাউনলোড</button>
+    </div>
+
+    <script>
+        function generateSlip() {
+            // ফর্ম থেকে ডেটা নেওয়া
+            const shopName = document.getElementById('shopName').value;
+            const employeeName = document.getElementById('employeeName').value;
+            const designation = document.getElementById('designation').value;
+            const salary = document.getElementById('salary').value;
+            const experience = document.getElementById('experience').value;
+            const ownerName = document.getElementById('ownerName').value;
+
+            // ডেটা স্লিপে বসানো
+            document.getElementById('displayShopName').innerText = shopName;
+            document.getElementById('displayEmployeeName').innerText = employeeName;
+            document.getElementById('displayDesignation').innerText = designation;
+            document.getElementById('displaySalary').innerText = salary;
+            document.getElementById('displayExperience').innerText = experience;
+            document.getElementById('displayOwnerName').innerText = ownerName;
+
+            // বর্তমান তারিখ দেখানো
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('bn-BD');
+            document.getElementById('currentDate').innerText = formattedDate;
+
+            // ফর্ম লুকিয়ে স্লিপ দেখানো
+            document.getElementById('form-container').style.display = 'none';
+            document.getElementById('salary-slip').style.display = 'block';
+        }
+
+        function downloadSlip() {
+            const element = document.getElementById('salary-slip');
+            const opt = {
+                margin:       0.5,
+                filename:     'salary_slip.pdf',
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</body>
+</html>
